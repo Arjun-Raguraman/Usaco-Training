@@ -1,0 +1,193 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+
+	//freopen("billboard.in", "r", stdin);
+
+	int ax1, ay1, ax2, ay2, bx1, by1, bx2, by2, tx1, ty1, tx2, ty2;
+	bool has_overlap_partialx = false;
+	bool has_overlap_fullx = false;
+	bool has_overlap_partialy = false;
+	bool has_overlap_fully = false;
+	cin >> ax1 >> ay1 >> ax2 >> ay2 >> bx1 >> by1 >> bx2 >> by2 >> tx1 >> ty1 >> tx2 >> ty2;
+
+	int area_a = ((ax2 - ax1) * (ay2 - ay1));
+
+	if (ax2 <= tx1 or tx2 <= ax1) {
+		has_overlap_partialx = false;
+	}
+	else if (tx1 <= ax1 and ax2 <= tx2) {
+		has_overlap_fullx = true;
+	}
+	else {
+		has_overlap_partialx = true;
+	}
+
+	if (has_overlap_partialx or has_overlap_fullx) {
+		if (ay2 <= ty1 or ty2 <= ay1) {
+			has_overlap_partialy = false;
+		}
+		else if (ty1 <= ay1 and ay2 <= ty2) {
+			has_overlap_fully = true;
+		}
+		else {
+			has_overlap_partialy = true;
+		}
+	}
+
+	if (has_overlap_fullx and has_overlap_fully) {
+		area_a = 0;
+	}
+	else if (has_overlap_fullx and has_overlap_partialy) {
+		if (ay1 < ty1 and ty2 < ay2) {
+			area_a = area_a - ((ty2 - ty1) * (ax2 - ax1));
+		}
+		else if (ay2 > ty2) {
+			area_a = area_a - ((ty2 - max(ay1, ty1)) * (ax2 - ax1));
+		}
+		else {
+			area_a = area_a - ((min(ay2, ty2) - ty1) * (ax2 - ax1));
+		}
+	}
+	else if (has_overlap_partialx and has_overlap_fully) {
+		if (ax1 < tx1 and tx2 < ax2) {
+			area_a = area_a - ((tx2 - tx1) * (ay2 - ay1));
+		}
+		else if (ax2 > tx2) {
+			area_a = area_a - ((tx2 - max(ax1, tx1)) * (ay2 - ay1));
+		}
+		else {
+			area_a = area_a - ((min(ax2, tx2) - tx1) * (ay2 - ay1));
+		}
+	}
+	else if (has_overlap_partialx and has_overlap_partialy) {
+		if (ax1 < tx1 and tx2 < ax2 and ay1 < ty1 and ty2 < ay2) {
+			area_a = area_a - ((tx2 - tx1) * (ty2 - ty1));
+		}
+		else if (ax1 < tx1 and tx1 < ax2 and ax2 < tx2) {
+			int overlap_y = min(ay2, ty2) - max(ay1, ty1);
+			area_a = area_a - ((ax2 - tx1) * overlap_y);
+		}
+		else if (tx1 < ax1 and ax1 < tx2 and tx2 < ax2) {
+			int overlap_y = min(ay2, ty2) - max(ay1, ty1);
+			area_a = area_a - ((tx2 - ax1) * overlap_y);
+		}
+		else {
+			if (ax1 < tx1 and tx2 < ax2) {
+				if (ty1 < ay1) {
+					area_a = area_a - ((ty2 - ay1) * (tx2 - tx1));
+				}
+				else {
+					area_a = area_a - ((ay2 - ty1) * (tx2 - tx1));
+				}
+			}
+			else if (ay1 < ty1 and ty2 < ay2) {
+				if (ax1 < tx1) {
+					area_a = area_a - ((ax2 - tx1) * (ty2 - ty1));
+				}
+				else {
+					area_a = area_a - ((tx2 - ax1) * (ty2 - ty1));
+				}
+			}
+		}
+	}
+
+
+	// RESET FLAGS BEFORE CALCULATING BILLBOARD B
+	has_overlap_partialx = false;
+	has_overlap_fullx = false;
+	has_overlap_partialy = false;
+	has_overlap_fully = false;
+
+
+	int area_b = ((bx2 - bx1) * (by2 - by1));
+
+	if (bx2 <= tx1 or tx2 <= bx1) {
+		has_overlap_partialx = false;
+	}
+	else if (tx1 <= bx1 and bx2 <= tx2) {
+		has_overlap_fullx = true;
+	}
+	else {
+		has_overlap_partialx = true;
+	}
+
+	if (has_overlap_partialx or has_overlap_fullx) {
+		if (by2 <= ty1 or ty2 <= by1) {
+			has_overlap_partialy = false;
+		}
+		else if (ty1 <= by1 and by2 <= ty2) {
+			has_overlap_fully = true;
+		}
+		else {
+			has_overlap_partialy = true;
+		}
+	}
+
+	if (has_overlap_fullx and has_overlap_fully) {
+		area_b = 0;
+	}
+	else if (has_overlap_fullx and has_overlap_partialy) {
+		if (by1 < ty1 and ty2 < by2) {
+			area_b = area_b - ((ty2 - ty1) * (bx2 - bx1));
+		}
+		else if (by2 > ty2) {
+			area_b = area_b - ((ty2 - max(by1, ty1)) * (bx2 - bx1));
+		}
+		else {
+			area_b = area_b - ((min(by2, ty2) - ty1) * (bx2 - bx1));
+		}
+	}
+	else if (has_overlap_partialx and has_overlap_fully) {
+		if (bx1 < tx1 and tx2 < bx2) {
+			area_b = area_b - ((tx2 - tx1) * (by2 - by1));
+		}
+		else if (bx2 > tx2) {
+			area_b = area_b - ((tx2 - max(bx1, tx1)) * (by2 - by1));
+		}
+		else {
+			area_b = area_b - ((min(bx2, tx2) - tx1) * (by2 - by1));
+		}
+	}
+	else if (has_overlap_partialx and has_overlap_partialy) {
+		if (bx1 < tx1 and tx2 < bx2 and by1 < ty1 and ty2 < by2) {
+			area_b = area_b - ((tx2 - tx1) * (ty2 - ty1));
+		}
+		else if (bx1 < tx1 and tx1 < bx2 and bx2 < tx2) {
+			int overlap_y = min(by2, ty2) - max(by1, ty1);
+			area_b = area_b - ((bx2 - tx1) * overlap_y);
+		}
+		else if (tx1 < bx1 and bx1 < tx2 and tx2 < bx2) {
+			int overlap_y = min(by2, ty2) - max(by1, ty1);
+			area_b = area_b - ((tx2 - bx1) * overlap_y);
+		}
+		else {
+			if (bx1 < tx1 and tx2 < bx2) {
+				if (ty1 < by1) {
+					area_b = area_b - ((ty2 - by1) * (tx2 - tx1));
+				}
+				else {
+					area_b = area_b - ((by2 - ty1) * (tx2 - tx1));
+				}
+			}
+			else if (by1 < ty1 and ty2 < by2) {
+				if (bx1 < tx1) {
+					area_b = area_b - ((bx2 - tx1) * (ty2 - ty1));
+				}
+				else {
+					area_b = area_b - ((tx2 - bx1) * (ty2 - ty1));
+				}
+			}
+		}
+	}
+
+	int area = (area_a + area_b);
+	cout << area << endl;
+
+	return 0;
+}
