@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+#include <sstream>
+
+using namespace std;
+
+int main() {
+
+	int N = 0, K = 0;
+	int counter = 0;
+	string newline;
+	string line;
+	string word;
+	int word_number = 0;
+
+	cin >> N >> K;
+	getline(cin >> ws, line);
+	stringstream ss(line);
+	while (ss >> word) {
+		word_number = word_number + 1;
+		counter = counter + (int)word.size();
+		if (counter <= K) {//continue in existing line
+			if (word_number == 1) {
+				cout << word;
+			}
+			else {
+				cout << " " << word;
+			}
+		}
+		else {//start a new line
+			cout << endl;
+			counter = (int)word.size();
+			cout << word;
+		}
+	}
+
+	return 0;
+}
