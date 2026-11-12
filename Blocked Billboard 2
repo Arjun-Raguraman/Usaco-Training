@@ -1,0 +1,73 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	// freopen("billboard.in", "r", stdin);
+
+	int ax1, ay1, ax2, ay2, lx1, ly1, lx2, ly2;
+	bool has_overlap_partialx = false;
+	bool has_overlap_fullx = false;
+	bool has_overlap_partialy = false;
+	bool has_overlap_fully = false;
+
+	cin >> lx1 >> ly1 >> lx2 >> ly2 >> ax1 >> ay1 >> ax2 >> ay2;
+
+	int area_l = ((lx2 - lx1) * (ly2 - ly1));
+	int area_tarp = 0;
+
+	if (lx2 <= ax1 or ax2 <= lx1) {
+		has_overlap_partialx = false;
+	}
+	else if (ax1 <= lx1 and lx2 <= ax2) {
+		has_overlap_fullx = true;
+	}
+	else {
+		has_overlap_partialx = true;
+	}
+	if (ay2 <= ly1 or ly2 <= ay1) {
+		has_overlap_partialy = false;
+	}
+	else if (ay1 <= ly1 and ly2 <= ay2) {
+		has_overlap_fully = true;
+	}
+	else {
+		has_overlap_partialy = true;
+	}
+	if (has_overlap_fullx and has_overlap_fully) {
+		area_tarp = 0;
+	}
+	else if (has_overlap_fullx and has_overlap_partialy) {
+		if (ay1 <= ly1 and ay2 > ly1) {
+			area_tarp = (lx2 - lx1) * (ly2 - ay2);
+		}
+		else if (ay2 >= ly2 and ay1 < ly2) {
+			area_tarp = (lx2 - lx1) * (ay1 - ly1);
+		}
+		else {
+			area_tarp = area_l;
+		}
+	}
+	else if (has_overlap_fully and has_overlap_partialx) {
+		if (ax1 <= lx1 and ax2 > lx1) {
+			area_tarp = (lx2 - ax2) * (ly2 - ly1);
+		}
+		else if (ax2 >= lx2 and ax1 < lx2) {
+			area_tarp = (ax1 - lx1) * (ly2 - ly1);
+		}
+		else {
+			area_tarp = area_l;
+		}
+	}
+	else {
+		area_tarp = area_l;
+	}
+
+	cout << area_tarp << endl;
+
+	return 0;
+}
