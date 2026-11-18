@@ -1,0 +1,39 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+#include <sstream>
+
+using namespace std;
+
+int main(){
+	int rows, cols, scale;
+	//input for m, n, and k
+	cin >> rows >> cols >> scale;
+
+	vector<vector<char>> dynamicGrid(rows, vector<char>(cols, 0));
+
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < cols; ++j) {
+			cin >> dynamicGrid[i][j];
+		}
+	}
+
+	for (int i = 0; i < rows; ++i) {
+		for (int k1 = 0; k1 < scale; ++k1) {
+			for (int j = 0; j < cols; ++j) {
+				for (int k = 0; k < scale; ++k) {
+					std::cout << dynamicGrid[i][j] << "";
+				}
+			}
+			if (k1 != scale - 1) {
+				cout << endl;
+			}
+		}
+		
+		std::cout << "\n";
+	}
+
+	return 0;
+}
